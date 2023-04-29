@@ -24,3 +24,28 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	// Returns the newly created product data back to the client.
 	json.NewEncoder(w).Encode(product)
 }
+
+// ****************************************************************
+// Get By ID
+// ****************************************************************
+
+// The below function takes in the productId and queries against the database if the ID is found in the table. If there are no records found for the ID, GORM would return the ID as 0 for which the entire function, in turn, would return false. If the Product Id is found in the table, a true flag will be returned. 
+func checkIfProductExists(productId string) bool {
+	var product entities.Product
+	database.Instance.First(&product, productId)
+	if product.ID == 0 {
+		return false
+	}
+	return true
+}
+func GetProductById(w http.ResponseWriter, r *http.Request) {
+	productId := mux.Vars(r)["id"]//Gets the Product Id from the Query string of the request.
+	if checkIfProductExists(productId) == false {
+		json.NewEncoder(w).Encode("Product Not Found!")
+		return
+	}
+	var product entities.Product //Creates a new product variable.
+	database.Instance.First(&product, productId)//With the help of GORM, the product table is queried with the product Id. This would fill in the product details to the newly created product variable.
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(product)//encode the product variable and send it back to the client.
+}
