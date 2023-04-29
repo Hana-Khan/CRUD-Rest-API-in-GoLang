@@ -84,3 +84,24 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(product)
 }
 
+// ****************************************************************
+// Delete
+// ****************************************************************
+
+func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	//  Extracts the id to be deleted from the request URL. 
+	// Checks if the ID is actually available in the product table. 
+	productId := mux.Vars(r)["id"]
+	if checkIfProductExists(productId) == false {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode("Product Not Found!")
+		return
+	}
+	// create a new product variable.
+	var product entities.Product
+	// GORM deletes the product by ID.
+	database.Instance.Delete(&product, productId)
+	// send a message of “Product Deleted Successfully!” to the client
+	json.NewEncoder(w).Encode("Product Deleted Successfully!")
+}
