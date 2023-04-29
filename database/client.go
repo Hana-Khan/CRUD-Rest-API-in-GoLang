@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"crud-rest-api-in-golang/entities"
