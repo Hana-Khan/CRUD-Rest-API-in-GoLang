@@ -49,3 +49,16 @@ func GetProductById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(product)//encode the product variable and send it back to the client.
 }
+
+// ****************************************************************
+// Get All
+// ****************************************************************
+
+func GetProducts(w http.ResponseWriter, r *http.Request) {
+	var products []entities.Product//define an empty new list of products.
+	database.Instance.Find(&products)//Maps all the available products into the product list variable.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)//write an HTTP Status code of 200 OK to the Header of the response.
+	json.NewEncoder(w).Encode(products)	// encodes the products variable and returns it back to the client.
+}
+
