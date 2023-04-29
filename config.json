@@ -1,5 +1,5 @@
 {
     "connection_string": 
-    "root:root@tcp(localhost:3306)/crud_demo",
+    "root:@tcp(localhost:3306)/crud-demo",
     "port": 8080
 }
