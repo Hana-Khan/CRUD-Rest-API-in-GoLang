@@ -1,8 +1,15 @@
 package main
 import (
+	"fmt"
 	"crud-rest-api-in-golang/controllers"
 	"crud-rest-api-in-golang/database"
+	"log"
+	"net/http"
+	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
+var DB *gorm.DB
+
 func main() {
 	// Load Configurations from config.json using Viper
 	LoadAppConfig()
