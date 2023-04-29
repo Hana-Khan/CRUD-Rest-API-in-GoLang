@@ -62,3 +62,25 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(products)	// encodes the products variable and returns it back to the client.
 }
 
+// ****************************************************************
+// Update
+// ****************************************************************
+
+func UpdateProduct(w http.ResponseWriter, r *http.Request) {
+	// MUX extracts the id from the URL and assigns the value to the id variable. 
+	productId := mux.Vars(r)["id"]
+	// 	Then the code checks if the passed product Id actually exists in the product table.
+	if checkIfProductExists(productId) == false {
+		json.NewEncoder(w).Encode("Product Not Found!")
+		return
+	}
+	// If found, GORM queries the product record to the product variable. 
+	// The JSON decoder then converts the request body to a product variable, which is then saved to the database table.
+	var product entities.Product
+	database.Instance.First(&product, productId)
+	json.NewDecoder(r.Body).Decode(&product)
+	database.Instance.Save(&product)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(product)
+}
+
